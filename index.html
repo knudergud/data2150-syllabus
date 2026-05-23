@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DATA 2150 — Artificial Intelligence Tools | Summer 2026</title>
+  <style>
+    /* ── Reset & Base ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --green:      #00573F;   /* Tulane green */
+      --green-dark: #003D2B;
+      --green-pale: #e8f4ef;
+      --gold:       #8B6914;
+      --text:       #1a1a1a;
+      --muted:      #555;
+      --border:     #d4d4d4;
+      --bg:         #fafafa;
+      --white:      #ffffff;
+      --radius:     6px;
+      --shadow:     0 1px 4px rgba(0,0,0,.10);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: Georgia, 'Times New Roman', serif;
+      font-size: 16px;
+      line-height: 1.75;
+      color: var(--text);
+      background: var(--bg);
+    }
+
+    a { color: var(--green); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    /* ── Header / Hero ── */
+    header {
+      background: var(--green);
+      color: var(--white);
+      padding: 3rem 2rem 2.5rem;
+      text-align: center;
+    }
+    header .course-id {
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      font-size: .85rem;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+      opacity: .85;
+      margin-bottom: .5rem;
+    }
+    header h1 {
+      font-size: clamp(1.6rem, 4vw, 2.6rem);
+      font-weight: normal;
+      line-height: 1.25;
+      margin-bottom: 1rem;
+    }
+    header .meta {
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      font-size: .9rem;
+      opacity: .9;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: .5rem 1.5rem;
+    }
+    header .meta span::before { content: ''; }
+
+    /* ── Nav ── */
+    nav {
+      background: var(--green-dark);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    nav ul {
+      list-style: none;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    nav ul li a {
+      display: block;
+      color: rgba(255,255,255,.88);
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      font-size: .8rem;
+      letter-spacing: .05em;
+      text-transform: uppercase;
+      padding: .65rem 1rem;
+      transition: background .15s, color .15s;
+    }
+    nav ul li a:hover {
+      background: var(--green);
+      color: #fff;
+      text-decoration: none;
+    }
+
+    /* ── Layout ── */
+    main {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 0 1.5rem 4rem;
+    }
+
+    /* ── Sections ── */
+    section {
+      margin-top: 3rem;
+      padding-top: 1rem;
+    }
+
+    section h2 {
+      font-size: 1.4rem;
+      font-weight: normal;
+      color: var(--green-dark);
+      border-bottom: 2px solid var(--green);
+      padding-bottom: .4rem;
+      margin-bottom: 1.25rem;
+    }
+
+    section h3 {
+      font-size: 1.05rem;
+      color: var(--text);
+      margin: 1.4rem 0 .5rem;
+    }
+
+    p { margin-bottom: .9rem; }
+    p:last-child { margin-bottom: 0; }
+
+    ul, ol {
+      padding-left: 1.4rem;
+      margin-bottom: .9rem;
+    }
+    li { margin-bottom: .3rem; }
+
+    /* ── Info Card ── */
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+    .info-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-left: 4px solid var(--green);
+      border-radius: var(--radius);
+      padding: 1rem 1.2rem;
+      box-shadow: var(--shadow);
+    }
+    .info-card .label {
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      font-size: .75rem;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--muted);
+      margin-bottom: .3rem;
+    }
+    .info-card .value {
+      font-size: .95rem;
+      color: var(--text);
+    }
+    .info-card .value a { color: var(--green); }
+
+    /* ── Grading bars ── */
+    .grade-items { display: flex; flex-direction: column; gap: .8rem; margin-top: .5rem; }
+    .grade-item {}
+    .grade-item .grade-label {
+      display: flex;
+      justify-content: space-between;
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      font-size: .88rem;
+      margin-bottom: .3rem;
+    }
+    .grade-item .grade-label .pct {
+      color: var(--green-dark);
+      font-weight: bold;
+    }
+    .bar-track {
+      background: #e0e0e0;
+      border-radius: 20px;
+      height: 8px;
+    }
+    .bar-fill {
+      height: 8px;
+      border-radius: 20px;
+      background: var(--green);
+    }
+
+    /* ── Grade scale table ── */
+    .grade-table-wrap { overflow-x: auto; margin-top: 1rem; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      font-size: .9rem;
+    }
+    thead tr {
+      background: var(--green);
+      color: #fff;
+    }
+    thead th {
+      padding: .6rem 1rem;
+      text-align: left;
+      font-weight: 500;
+      letter-spacing: .04em;
+    }
+    tbody tr:nth-child(even) { background: var(--green-pale); }
+    tbody td { padding: .55rem 1rem; border-bottom: 1px solid var(--border); }
+
+    /* ── Policies ── */
+    .policy-block {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.2rem 1.4rem;
+      margin-bottom: 1rem;
+      box-shadow: var(--shadow);
+    }
+    .policy-block h3 {
+      margin-top: 0;
+      color: var(--green-dark);
+      font-size: 1rem;
+    }
+
+    /* ── Privacy table ── */
+    .privacy-table-wrap { overflow-x: auto; margin-top: 1rem; }
+    .privacy-table-wrap table thead tr { background: var(--green-dark); }
+    .privacy-table-wrap table tbody td { vertical-align: top; font-size: .85rem; }
+
+    /* ── Footer ── */
+    footer {
+      background: var(--green-dark);
+      color: rgba(255,255,255,.7);
+      text-align: center;
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      font-size: .8rem;
+      padding: 1.4rem;
+      margin-top: 4rem;
+    }
+    footer a { color: rgba(255,255,255,.85); }
+
+    @media (max-width: 560px) {
+      header { padding: 2rem 1rem 1.75rem; }
+      nav ul li a { padding: .55rem .7rem; font-size: .72rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ════════════════════════════════ HEADER ════════════════════════════════ -->
+<header>
+  <p class="course-id">Tulane University &nbsp;·&nbsp; School of Science &amp; Engineering</p>
+  <h1>Artificial Intelligence Tools</h1>
+  <div class="meta">
+    <span>DATA 2150 &nbsp;|&nbsp; 3 Credits</span>
+    <span>Summer 2026 &nbsp;·&nbsp; May 26 – June 26</span>
+    <span>Online &nbsp;·&nbsp; Max 25 Students</span>
+  </div>
+</header>
+
+<!-- ════════════════════════════════ NAV ════════════════════════════════ -->
+<nav>
+  <ul>
+    <li><a href="#info">Course Info</a></li>
+    <li><a href="#description">Description</a></li>
+    <li><a href="#goals">Goals &amp; Objectives</a></li>
+    <li><a href="#grading">Grading</a></li>
+    <li><a href="#policies">Policies</a></li>
+  </ul>
+</nav>
+
+<!-- ════════════════════════════════ MAIN ════════════════════════════════ -->
+<main>
+
+  <!-- COURSE INFO -->
+  <section id="info">
+    <h2>Course Information</h2>
+    <div class="info-grid">
+      <div class="info-card">
+        <div class="label">Instructor</div>
+        <div class="value">Knud E. Berthelsen<br><a href="mailto:kberthel@tulane.edu">kberthel@tulane.edu</a></div>
+      </div>
+      <div class="info-card">
+        <div class="label">Office Hours</div>
+        <div class="value">By appointment on Zoom</div>
+      </div>
+      <div class="info-card">
+        <div class="label">Peer Mentor / TA</div>
+        <div class="value">Campbell Reid<br><a href="mailto:creid9@tulane.edu">creid9@tulane.edu</a></div>
+      </div>
+      <div class="info-card">
+        <div class="label">Canvas</div>
+        <div class="value"><a href="https://tulane.instructure.com/courses/2311652" target="_blank">Open Course Site ↗</a></div>
+      </div>
+      <div class="info-card">
+        <div class="label">Format</div>
+        <div class="value">Asynchronous Online<br>Weekly deadlines</div>
+      </div>
+      <div class="info-card">
+        <div class="label">Required Resources</div>
+        <div class="value">Personal computer; some paid AI tool subscriptions expected</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DESCRIPTION -->
+  <section id="description">
+    <h2>Course Description</h2>
+    <p>The introduction of widely available and accessible generative Artificial Intelligence tools, such as ChatGPT, democratizes expertise, unlocks knowledge, and bestows impressive abilities. This hands-on course provides students with practical experience employing generative AI to perform real-world tasks.</p>
+    <p>By the end of the course, students will be able to effectively collect accurate historical and real-time information, generate high-quality text and media, transform content between formats, analyze data to derive insights, and deploy generative AI to tackle private and professional challenges.</p>
+    <p><strong>No pre- or co-requisites.</strong></p>
+
+    <h3>Use of AI in This Course</h3>
+    <p>As this is a course on how to use AI tools, the use of such tools is expected and encouraged, as is the discussion of which tools were used, how they were used, and how they performed.</p>
+  </section>
+
+  <!-- GOALS & OBJECTIVES -->
+  <section id="goals">
+    <h2>Goals &amp; Learning Objectives</h2>
+
+    <h3>Course Goals</h3>
+    <ol>
+      <li>Develop a comprehensive understanding of the principles, capabilities, and limitations of AI.</li>
+      <li>Master the use of key AI tools and best practices for effective AI interaction and collaboration.</li>
+      <li>Gain practical experience applying AI to real-world problems across various domains.</li>
+      <li>Cultivate critical thinking skills for evaluating AI models, tools, and outputs.</li>
+      <li>Explore emerging trends in AI and their potential impact on future professional landscapes.</li>
+    </ol>
+
+    <h3>Upon Completion, Students Will Be Able To:</h3>
+    <ol>
+      <li>Explain and discuss the principles, capabilities, and limitations of generative AI.</li>
+      <li>Master the use of key AI tools following best practices.</li>
+      <li>Apply AI to real-world problems across various domains.</li>
+      <li>Critically evaluate new AI models, tools, and outputs.</li>
+      <li>Analyze trends in AI development and evaluate their potential impacts.</li>
+    </ol>
+  </section>
+
+  <!-- GRADING -->
+  <section id="grading">
+    <h2>Evaluation &amp; Grading</h2>
+
+    <p>This course is designed around <strong>experiential learning</strong> — students learn through active engagement with hands-on AI projects — and <strong>low-stakes in-class assessment</strong> with frequent assignments that individually have a relatively low impact on the final grade.</p>
+
+    <h3>Grade Breakdown</h3>
+    <div class="grade-items">
+      <div class="grade-item">
+        <div class="grade-label"><span>"In-Class" Assignments</span><span class="pct">30%</span></div>
+        <div class="bar-track"><div class="bar-fill" style="width:30%"></div></div>
+      </div>
+      <div class="grade-item">
+        <div class="grade-label"><span>Interactive Website Project <em>(Team)</em></span><span class="pct">20%</span></div>
+        <div class="bar-track"><div class="bar-fill" style="width:20%"></div></div>
+      </div>
+      <div class="grade-item">
+        <div class="grade-label"><span>Static Website Project <em>(Individual)</em></span><span class="pct">15%</span></div>
+        <div class="bar-track"><div class="bar-fill" style="width:15%"></div></div>
+      </div>
+      <div class="grade-item">
+        <div class="grade-label"><span>App Project <em>(Individual)</em></span><span class="pct">15%</span></div>
+        <div class="bar-track"><div class="bar-fill" style="width:15%"></div></div>
+      </div>
+      <div class="grade-item">
+        <div class="grade-label"><span>Participation</span><span class="pct">10%</span></div>
+        <div class="bar-track"><div class="bar-fill" style="width:10%"></div></div>
+      </div>
+      <div class="grade-item">
+        <div class="grade-label"><span>Peer Assessment</span><span class="pct">10%</span></div>
+        <div class="bar-track"><div class="bar-fill" style="width:10%"></div></div>
+      </div>
+    </div>
+
+    <h3>Assignment Descriptions</h3>
+    <p><strong>"In-Class" Assignments (30%):</strong> Practical assignments tied to modules and topics, designed to provide hands-on experience with generative AI applied to real-world tasks. Detailed instructions provided in Canvas.</p>
+    <p><strong>Static Website Project (15%, Individual):</strong> Each student uses AI tools (e.g., Claude Code, ChatGPT Codex, Perplexity Computer) to build a personal website.</p>
+    <p><strong>App Project (15%, Individual):</strong> Each student uses AI (e.g., Google AI Studio) to build an app.</p>
+    <p><strong>Interactive Website Project (20%, Team):</strong> Each team uses AI to build an interactive website.</p>
+    <p><strong>Participation (10%):</strong> Active and meaningful engagement on Canvas — discussions, reflections, resource sharing, and a representative profile with name and photo.</p>
+    <p><strong>Peer Assessment (10%):</strong> Confidential feedback on team members based on your experience working together.</p>
+
+    <h3>Grade Scale</h3>
+    <div class="grade-table-wrap">
+      <table>
+        <thead>
+          <tr><th>Letter Grade</th><th>Percentage Range</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>A</td><td>93 – 100%</td></tr>
+          <tr><td>A−</td><td>90 – 92%</td></tr>
+          <tr><td>B+</td><td>87 – 89%</td></tr>
+          <tr><td>B</td><td>83 – 86%</td></tr>
+          <tr><td>B−</td><td>80 – 82%</td></tr>
+          <tr><td>C+</td><td>77 – 79%</td></tr>
+          <tr><td>C</td><td>73 – 76%</td></tr>
+          <tr><td>C−</td><td>70 – 72%</td></tr>
+          <tr><td>D+</td><td>67 – 69%</td></tr>
+          <tr><td>D</td><td>63 – 66%</td></tr>
+          <tr><td>D−</td><td>60 – 62%</td></tr>
+          <tr><td>F</td><td>59% or below</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>Attendance</h3>
+    <p>This is an asynchronous online class with weekly deadlines. Students may organize their time freely within this schedule. Note that AI tools have usage limits — do not leave everything to the last minute. Grades are due immediately after the last day of class.</p>
+  </section>
+
+  <!-- POLICIES -->
+  <section id="policies">
+    <h2>University Policies</h2>
+
+    <div class="policy-block">
+      <h3>ADA / Accessibility</h3>
+      <p>Tulane University is committed to offering accessible classes. If you anticipate or encounter disability-related barriers, contact the <strong>Goldman Center for Student Accessibility</strong>: <a href="mailto:goldman@tulane.edu">goldman@tulane.edu</a> · (504) 862-8433 · <a href="https://accessibility.tulane.edu" target="_blank">accessibility.tulane.edu</a>. No medical documentation will be requested from students.</p>
+    </div>
+
+    <div class="policy-block">
+      <h3>Academic Integrity</h3>
+      <p>The <a href="https://college.tulane.edu/academics/academic-integrity/code-of-academic-conduct" target="_blank">Code of Academic Conduct</a> applies to all undergraduate students. By accepting admission, students accept Tulane's regulations and acknowledge the university's right to take disciplinary action for unsatisfactory conduct.</p>
+    </div>
+
+    <div class="policy-block">
+      <h3>Welcoming Community</h3>
+      <p>Tulane's core value of "welcoming community" means cultivating spaces where all backgrounds, experiences, and perspectives can thrive. Students are encouraged to practice humility and engage respectfully across differences. See the <a href="https://conduct.tulane.edu/code-conduct" target="_blank">Student Code of Conduct</a> and <a href="https://hr.tulane.edu/ii-equal-opportunity-anti-discrimination-policies#" target="_blank">Anti-discrimination Statement</a>.</p>
+    </div>
+
+    <div class="policy-block">
+      <h3>Religious Accommodation</h3>
+      <p>Every reasonable effort will be made to ensure students can observe religious holidays without jeopardizing academic obligations. Notify the instructor within the first two weeks of the semester about any holidays that fall on class days or exam dates.</p>
+    </div>
+
+    <div class="policy-block">
+      <h3>Title IX</h3>
+      <p>Tulane is committed to providing an environment free of all forms of discrimination including sexual and gender-based discrimination, harassment, and violence. Resources are available at <a href="https://allin.tulane.edu" target="_blank">allin.tulane.edu</a>. Note that the instructor is required to report disclosures of gender-based discrimination to the Office of Case Management and Victim Support Services.</p>
+
+      <p style="margin-top:.8rem;"><strong>Confidential Resources</strong></p>
+      <ul>
+        <li>Counseling &amp; Psychological Services (CAPS): (504) 314-2277</li>
+        <li>The Line (24/7): (504) 264-6074</li>
+        <li>Student Health Center: (504) 865-5255</li>
+        <li>SAPHE: (504) 654-9543</li>
+      </ul>
+
+      <p style="margin-top:.8rem;"><strong>Private Resources</strong></p>
+      <ul>
+        <li>Case Management &amp; Victim Support Services: (504) 314-2160 · <a href="mailto:srss@tulane.edu">srss@tulane.edu</a></li>
+        <li>Tulane University Police (TUPD) Uptown: (504) 865-5911</li>
+        <li>Office of University Sexual Misconduct Response &amp; Title IX: (504) 865-5611 · <a href="mailto:titleix@tulane.edu">titleix@tulane.edu</a></li>
+        <li>Student Affairs Professional On-Call (24/7): (504) 920-9900</li>
+      </ul>
+
+      <p style="margin-top:.8rem;"><strong>Pregnant &amp; Parenting Students:</strong> Visit <a href="https://pregnancy.tulane.edu" target="_blank">pregnancy.tulane.edu</a> for support resources. Discrimination based on pregnancy is prohibited by Title IX.</p>
+    </div>
+
+  </section>
+
+</main>
+
+<!-- ════════════════════════════════ FOOTER ════════════════════════════════ -->
+<footer>
+  <p>DATA 2150 · Artificial Intelligence Tools · Summer 2026 · Tulane University</p>
+  <p style="margin-top:.4rem;">Instructor: Knud E. Berthelsen · <a href="mailto:kberthel@tulane.edu">kberthel@tulane.edu</a></p>
+</footer>
+
+</body>
+</html>
